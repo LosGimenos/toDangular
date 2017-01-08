@@ -1,6 +1,6 @@
 angular.module('todoController', [])
   .controller('mainController', function($scope, $http, Todos) {
-    $scope.formData  {};
+    $scope.formData = {};
 
     Todos.get()
       .success(function(data) {
