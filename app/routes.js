@@ -1,50 +1,31 @@
-const Todo = require('./models/todo');
 
-module.exports = function(app) {
+module.exports = function(app, passport) {
 
-  app.get('/api/todos', (req,res) => {
-    Todo.find((err, todos) => {
-      if(err) {
-        res.send(err);
-      };
-      res.json(todos);
+  app.get('/', function(req, res) {
+    res.render(index.ejs);
+  });
+
+  app.get('/login', function(req, res) {
+    res.render('login.ejs', {message: req.flash('loginMessage') });
+  });
+
+  // app.post('/login', function stuff)
+
+  app.get('/profile', isLoggedIn, function(req, res) {
+    res.render('profile.ejs', {
+      user: req.user
     });
   });
 
-  app.post('/api/todos', (req,res) => {
-    Todo.create({
-      text: req.body.text,
-      done: false
-    }, (err, todo) => {
-      if(err) {
-        res.send(err);
-      };
-      Todo.find((err, todos) => {
-        if(err) {
-          res.send(err);
-        };
-        res.json(todos);
-      });
-    });
-  });
-
-  app.delete('/api/todos/:todo_id', (req, res) => {
-    Todo.remove({
-      _id: req.params.todo_id
-    }, (err, todo) => {
-        if(err) {
-          res.send(err);
-        };
-        Todo.find((err, todos) => {
-          if(err) {
-            res.send(err);
-          }
-          res.json(todos);
-        });
-    });
-  });
-
-  app.get('*', (req,res)=>{
-    res.sendfile('./public/index.html');
+  app.get('/logout', function(req, res) {
+    req.logout();
+    res.redirect('/');
   });
 }
+
+  function isLoggedIn(req, res, next) {
+    if(req.isAuthenticated()) {
+      return next();
+    }
+    res.redirect('/');
+  }
