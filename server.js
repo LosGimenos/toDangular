@@ -19,7 +19,6 @@ mongoose.connect(database.url);
 
 // require('./config/passport')(passport);
 
-app.use(express.static(__dirname + '/public'));
 app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({'extended':'true'}));
@@ -28,7 +27,7 @@ app.use(bodyParser.json({type: 'application/vnd.api+json'}));
 
 app.set('view engine', 'ejs');
 
-app.use(session({ secret: sessionSecret }));
+app.use(session({ secret: sessionSecret, cookie: { maxAge: 60000 }, resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
