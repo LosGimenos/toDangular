@@ -16,10 +16,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.json({type: 'application/vnd.api+json'}));
 //app.use(methodOverride);
 
-const Todo = mongoose.model('Todo', {
-  text : String
-});
-
 app.get('/api/todos', (req,res) => {
   Todo.find((err, todos) => {
     if(err) {
