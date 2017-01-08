@@ -3,10 +3,11 @@ const express = require('express');
       morgan = require('morgan');
       bodyParser = require('body-parser');
       methodOverride = require('method-override');
+      database = require('./config/database');
 
 const app = express();
 
-mongoose.connect('mongodb://todoangular:BlahBlah@ds157298.mlab.com:57298/todoangular');
+mongoose.connect(database.url);
 
 app.use(express.static(__dirname + '/public'));
 app.use(morgan('dev'));
