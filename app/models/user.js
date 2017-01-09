@@ -11,29 +11,28 @@ const userSchema = mongoose.Schema({
     id: String,
     token: String,
     email: String,
-    name: String
+    name: String,
   },
   twitter: {
     id: String,
     token: String,
     email: String,
-    name: String
+    name: String,
   },
   google: {
     id: String,
     token: String,
     email: String,
-    name: String
-  }
-
+    name: String,
+  },
 });
 
-userSchema.methods.generateHash = function(password) {
+userSchema.methods.generateHash = (password) => {
   return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
 
-userSchema.methods.validPassword = function(password) {
-  return bcyrpt.compareSync(password, this.local.password);
+userSchema.methods.validPassword = (password) => {
+  return bcrypt.compareSync(password, this.local.password);
 };
 
 module.exports = mongoose.model('User', userSchema);

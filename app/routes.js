@@ -1,31 +1,40 @@
 
-module.exports = function(app, passport) {
-
-  app.get('/', function(req, res) {
+module.exports = (app, passport) => {
+  app.get('/', (req, res) => {
     res.render('index.ejs');
   });
 
-  app.get('/login', function(req, res) {
-    res.render('login.ejs', {message: req.flash('loginMessage') });
+  app.get('/login', (req, res) => {
+    res.render('login.ejs', { message: req.flash('loginMessage') });
   });
 
-  // app.post('/login', function stuff)
+  app.get('/signup', (req, res) => {
+    res.render('signup.ejs', { message: req.flash('signupMessage') });
+  });
 
-  app.get('/profile', isLoggedIn, function(req, res) {
+  // app.post('/login',  stuff)
+
+  app.get('/profile', isLoggedIn, (req, res) => {
     res.render('profile.ejs', {
-      user: req.user
+      user: req.user,
     });
   });
 
-  app.get('/logout', function(req, res) {
+  app.get('/logout', (req, res) => {
     req.logout();
     res.redirect('/');
   });
-}
 
-  function isLoggedIn(req, res, next) {
-    if(req.isAuthenticated()) {
-      return next();
-    }
-    res.redirect('/');
+  app.post('/signup', passport.authenticate('local-signup', {
+    succesRedirect: '/profile',
+    failureRedirect: '/signup',
+    failureFlash: true,
+  }));
+};
+
+function isLoggedIn(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
   }
+  res.redirect('/');
+}
